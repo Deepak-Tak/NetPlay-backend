@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   username: String,
   password: String,
   email: String,
+  playlist: { type: [String], default: [] },
 });
 const User = mongoose.model("users", userSchema);
 
