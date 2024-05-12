@@ -8,7 +8,7 @@ const userMiddleware = (req, res, next) => {
     next();
   } catch (e) {
     console.log("token error");
-    res.json({ message: "Invalid credentials" });
+    res.status(400).json({ message: "Invalid credentials" });
   }
 };
 

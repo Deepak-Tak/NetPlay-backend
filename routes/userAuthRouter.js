@@ -4,17 +4,19 @@ const jwt = require("jsonwebtoken");
 
 const router = Router();
 
-router.get("/signin", async (req, res) => {
+router.post("/signin", async (req, res) => {
   const email = req.body.email;
+  console.log(email);
+
   const password = req.body.password;
 
   const userExists = await User.findOne({ email, password });
 
   if (userExists) {
     const token = jwt.sign({ email }, "123");
-    res.json({ token });
+    res.status(200).json({ token, email, username: userExists.username });
   } else {
-    res.status(403).json({ message: "invalid username or password" });
+    res.status(403).json({ message: "invalid email or password" });
   }
 });
 
@@ -27,15 +29,15 @@ router.post("/signup", async (req, res) => {
     const emailExists = await User.findOne({ email });
     const usernameExists = await User.findOne({ username });
     if (emailExists) {
-      res.json({ message: "email already in use" });
+      res.status(403).json({ message: "email already in use" });
     } else if (usernameExists) {
-      res.json({ message: "username already in use" });
+      res.status(403).json({ message: "username already in use" });
     } else {
       await User.create({ username, email, password });
       res.status(200).json({ message: "user created successfully" });
     }
   } catch (e) {
-    res.json({ message: "try again" });
+    res.status(500).json({ message: "try again" });
   }
 });
 

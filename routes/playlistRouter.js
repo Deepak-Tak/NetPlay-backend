@@ -7,6 +7,7 @@ const router = Router();
 
 router.get("/", userMiddleware, async (req, res) => {
   const email = req.email;
+  console.log(email);
   const user = await User.findOne({ email });
   res.status(200).json({ message: user.playlist });
 });
@@ -16,11 +17,11 @@ router.post("/add", userMiddleware, async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { email },
-      { $push: { playlist: playlistItem } }
+      { $addToSet: { playlist: playlistItem } }
     );
     res.status(200).json({ message: "successfull" });
   } catch (e) {
-    res.json({ message: "something went wrong try again" });
+    res.status(500).json({ message: "something went wrong try again" });
   }
 });
 router.post("/remove", userMiddleware, async (req, res) => {
@@ -33,7 +34,7 @@ router.post("/remove", userMiddleware, async (req, res) => {
     );
     res.status(200).json({ message: "successfull" });
   } catch (e) {
-    res.json({ message: "something went wrong try again" });
+    res.status(500).json({ message: "something went wrong try again" });
   }
 });
 
